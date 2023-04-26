@@ -38,6 +38,14 @@ const PropertySchema = new mongoose.Schema(
     image: {
       type: String,
     },
+    latitude: {
+      type: Number,
+      required: true,
+    },
+    longitude: {
+      type: Number,
+      required: true,
+    },
     // createdBy: {
     //   type: mongoose.Schema.Types.ObjectId,
     //   ref: "User",

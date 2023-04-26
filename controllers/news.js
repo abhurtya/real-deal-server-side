@@ -42,7 +42,6 @@ export const deleteNews = async (req, res) => {
 
 // Get all news articles
 export const getNews = async (req, res) => {
-
   try {
     const news = await News.find();
     res.status(200).json(news);
@@ -76,9 +75,7 @@ export const addDummyData = async (req, res) => {
   try {
     await News.insertMany(newsData);
     res.status(201).json({ message: "News articles added successfully" });
-  }
-  catch (error) {
+  } catch (error) {
     res.status(409).json({ message: error.message });
   }
-  
 };
