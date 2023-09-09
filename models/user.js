@@ -8,13 +8,21 @@ const UserSchema = new mongoose.Schema(
     },
     lastname: {
       type: String,
-      required: true,
+      // required: true,
     },
     email: {
       type: String,
       required: true,
       unique: true,
     },
+
+    profileImage: {
+      type: String,
+    },
+    googleId: {
+      type: String,
+
+    }
   },
   { timestamps: true }
 );

@@ -1,18 +1,12 @@
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const FacebookStrategy = require("passport-facebook").Strategy;
-const TwitterStrategy = require("passport-twitter").Strategy;
-const passport = require("passport");
+// const FacebookStrategy = require("passport-facebook").Strategy;
+import passport from "passport";
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 
+import User from "./models/user.js";
 
 const GOOGLE_CLIENT_ID =
-  "1005860646938-j4ftsrjt2v77tj78ukirq2entncsjn7m.apps.googleusercontent.com";
-const GOOGLE_CLIENT_SECRET = "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";
-
-FACEBOOK_APP_ID = "your id";
-FACEBOOK_APP_SECRET = "your id";
-
-TWITTER_APP_ID = "your id";
-TWITTER_APP_SECRET = "your id";
+  "1005860646938-a3m9kpp4ks9g0rrtpsie5imf8c533kf3.apps.googleusercontent.com";
+const GOOGLE_CLIENT_SECRET = "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";
 
 passport.use(
   new GoogleStrategy(
@@ -21,38 +15,37 @@ passport.use(
       clientSecret: GOOGLE_CLIENT_SECRET,
       callbackURL: "/auth/google/callback",
     },
-    function (accessToken, refreshToken, profile, done) {
-      done(null, profile);
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        //if user exists
+
+        const currentUser = await User.findOne({ googleId: profile.id });
+        if (currentUser) {
+          currentUser.firstname = profile.name.givenName;
+          currentUser.lastname = profile.name.familyName;
+          currentUser.profileImage = profile.photos[0].value;
+          currentUser.email = profile.emails[0].value;
+          await currentUser.save();
+          return done(null, currentUser);
+        } else {
+          //if user does not exist, create a new one
+          const newUser = new User({
+            googleId: profile.id,
+            firstname: profile.name.givenName,
+            lastname: profile.name.familyName,
+            profileImage: profile.photos[0].value,
+            email: profile.emails[0].value,
+          });
+          await newUser.save();
+          return done(null, newUser);
+        }
+      } catch (err) {
+        console.log(err);
+        return done(err, null);
+      }
     }
-    
   )
 );
-
-passport.use(
-  new FacebookStrategy(
-    {
-      clientID: FACEBOOK_APP_ID,
-      clientSecret: FACEBOOK_APP_SECRET,
-      callbackURL: "/auth/facebook/callback",
-    },
-    function (accessToken, refreshToken, profile, done) {
-      done(null, profile);
-    }
-  )
-);
-
-// passport.use(
-//   new TwitterStrategy(
-//     {
-//       clientID: TWITTER_APP_ID,
-//       clientSecret: TWITTER_APP_SECRET,
-//       callbackURL: "/auth/twitter/callback",
-//     },
-//     function (accessToken, refreshToken, profile, done) {
-//       done(null, profile);
-//     }
-//   )
-// );
 
 passport.serializeUser((user, done) => {
   done(null, user);

@@ -78,45 +78,45 @@ router.post("/requestlisting", (req, res) => {
     subject: "New Property Listing Request",
     text: "and easy to do anywhere, even with Node.js",
     html: `
-      <h2>New Property Listing Request</h2>
+      <h2 style="color: #007bff;">New Property Listing Request</h2>
       <p>Hello Real Estate Team,</p>
       <p>A new property listing has been requested on your website:</p>
-      <table>
+      <table >
         <tr>
-        <td><b>First Name:</b></td>
-        <td>${firstName}</td>
+        <td style="border: 1px solid #ccc; padding: 10px;"><b>First Name:</b></td>
+        <td style="border: 1px solid #ccc; padding: 10px;">${firstName}</td>
         </tr>
         <tr>
-        <td><b>Last Name:</b></td>
-        <td>${lastName}</td>
+        <td style="border: 1px solid #ccc; padding: 10px;"><b>Last Name:</b></td>
+        <td style="border: 1px solid #ccc; padding: 10px;">${lastName}</td>
         </tr>
         <tr>
-        <td><b>Email:</b></td>
-        <td>${email}</td>
+        <td style="border: 1px solid #ccc; padding: 10px;"><b>Email:</b></td>
+        <td style="border: 1px solid #ccc; padding: 10px;">${email}</td>
         </tr>
         <tr>
-        <td><b>Phone:</b></td>
-        <td>${phone}</td>
+        <td style="border: 1px solid #ccc; padding: 10px;"><b>Phone:</b></td>
+        <td style="border: 1px solid #ccc; padding: 10px;">${phone}</td>
         </tr>
         <tr>
-          <td><b>Property Type:</b></td>
-          <td>${propertyType}</td>
+          <td style="border: 1px solid #ccc; padding: 10px;"><b>Property Type:</b></td>
+          <td style="border: 1px solid #ccc; padding: 10px;">${propertyType}</td>
         </tr>
         <tr>
-          <td><b>Property History:</b></td>
-          <td>${propertyHistory}</td>
+          <td style="border: 1px solid #ccc; padding: 10px;"><b>Property History:</b></td>
+          <td style="border: 1px solid #ccc; padding: 10px;">${propertyHistory}</td>
         </tr>
         <tr>
-          <td><b>Neighbour Benefits:</b></td>
-          <td>${neighbourBenefits}</td>
+          <td style="border: 1px solid #ccc; padding: 10px;"><b>Neighbour Benefits:</b></td>
+          <td style="border: 1px solid #ccc; padding: 10px;">${neighbourBenefits}</td>
         </tr>
         <tr>
-          <td><b>Is Walkable:</b></td>
-          <td>${isWalkable}</td>
+          <td style="border: 1px solid #ccc; padding: 10px;"><b>Is Walkable:</b></td>
+          <td style="border: 1px solid #ccc; padding: 10px;">${isWalkable}</td>
         </tr>
         <tr>
-          <td><b>Has Schools Nearby:</b></td>
-          <td>${hasSchoolsNearby}</td>
+          <td style="border: 1px solid #ccc; padding: 10px;"><b>Has Schools Nearby:</b></td>
+          <td style="border: 1px solid #ccc; padding: 10px;">${hasSchoolsNearby}</td>
         </tr>
    
       </table>

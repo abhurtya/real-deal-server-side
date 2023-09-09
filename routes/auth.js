@@ -1,7 +1,10 @@
-const router = require("express").Router();
-const passport = require("passport");
 
-const CLIENT_URL = "http://localhost:3000/";
+import passport from "passport";
+
+import express from "express";
+const router = express.Router();
+
+const CLIENT_URL = "http://localhost:3000";
 
 router.get("/login/success", (req, res) => {
   if (req.user) {
@@ -24,35 +27,43 @@ router.get("/login/failed", (req, res) => {
 });
 
 router.get("/logout", (req, res) => {
-  req.logout();
-  res.redirect(CLIENT_URL);
+  // Check if the user is authenticated before logging out
+  if (req.isAuthenticated()) {
+    req.logout((err) => {
+      if (err) {
+        console.error("Error during logout:", err);
+        return res.status(500).send("Error: could not logout");
+      }
+
+      // Destroy the session
+      req.session.destroy((err) => {
+        if (err) {
+          console.error("Error destroying session:", err);
+          return res.status(500).send("Error: could not logout");
+        }
+
+        // Clear the connect.sid cookie
+        res.clearCookie("connect.sid");
+        console.log("User logged out");
+        res.redirect(CLIENT_URL);
+      });
+    });
+  } else {
+    // If the user not authenticated, redirect to the client URL
+    res.redirect(CLIENT_URL);
+  }
 });
 
-router.get("/google", passport.authenticate("google", { scope: ["profile"] }));
-
-// router.get(
-//   "/google/callback",
-//   passport.authenticate("google", {
-//     successRedirect: CLIENT_URL,
-//     failureRedirect: "/login/failed",
-//   })
-// );
+router.get('/google',
+passport.authenticate('google', { scope: ['profile', 'email'] })
+);
 
 router.get(
   "/google/callback",
   passport.authenticate("google", {
+    successRedirect: CLIENT_URL,
     failureRedirect: "/login/failed",
-  }),
-  function (req, res) {
-    if (req.session) {
-      req.session.regenerate(function (err) {
-        if (err) {
-          console.log(err);
-        }
-        res.redirect(CLIENT_URL);
-      });
-    }
-  }
+  })
 );
 
 router.get(
@@ -81,4 +92,4 @@ router.get(
   })
 );
 
-module.exports = router;
+export default router;
