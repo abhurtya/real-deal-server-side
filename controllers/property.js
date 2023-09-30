@@ -1,27 +1,57 @@
 import Property from "../models/property.js";
+import mongoose from "mongoose";
 
-// Add a new property
-export const addProperty = async (req, res) => {
+
+/**/
+/*
+NAME
+    addProperty - Adds a new property to the database.
+
+SYNOPSIS
+    addProperty(req, res)
+
+DESCRIPTION
+    Receives a property's data from the client via the request body and saves it to the database.
+    It first destructures the required fields from the request body, creates a new Property instance with these fields, 
+    and then attempts to save it to the database. If the operation succeeds, a 201 status code and the newly added property 
+    details are sent back to the client. If an error occurs, a 409 status code and the error message are returned.
+
+PARAMETERS
+    - req: The HTTP request object, containing the property data in its body.
+    - res: The HTTP response object.
+
+RETURNS
+    - On Success: HTTP 201 status code with the new property's details in JSON format.
+    - On Error: HTTP 409 status code with an error message in JSON format.
+*/
+/**/
+export const addProperty =  async (req, res) => {
   const {
-    name,
-    description,
-    location,
+    title,
+    address,
     price,
+    type,
     bedrooms,
     bathrooms,
-    sqft,
-    imgUrl,
+    size,
+    description,
+    image,
+    latitude,
+    longitude
   } = req.body;
 
   const newProperty = new Property({
-    name,
-    description,
-    location,
+    title,
+    address,
     price,
+    type,
     bedrooms,
     bathrooms,
-    sqft,
-    imgUrl,
+    size,
+    description,
+    image,
+    latitude,
+    longitude
   });
 
   try {
@@ -32,36 +62,67 @@ export const addProperty = async (req, res) => {
   }
 };
 
-// Update an existing property
+/**/
+/*
+NAME
+    updateProperty - Updates an existing property in the database.
+
+SYNOPSIS
+    updateProperty(req, res)
+
+DESCRIPTION
+    Receives updated property data from the client via the request body and the property's ID via the request parameters. 
+    It first checks if the provided ID is valid. If valid, it then updates the corresponding property in the database. 
+    If the operation succeeds, the updated property details are sent back to the client. If an error occurs or the ID is not valid, 
+    appropriate error messages and status codes are returned.
+
+PARAMETERS
+    - req: The HTTP request object, containing the updated property data in its body and the property's ID in its parameters.
+    - res: The HTTP response object.
+
+RETURNS
+    - On Success: The updated property's details in JSON format.
+    - On Invalid ID: HTTP 404 status code with an error message "No property with that id".
+    - On Error: HTTP 409 status code with an error message in JSON format.
+*/
+/**/
+
 export const updateProperty = async (req, res) => {
   const { id } = req.params;
   const {
-    name,
-    description,
-    location,
+    title,
+    address,
     price,
+    type,
     bedrooms,
     bathrooms,
-    sqft,
-    imgUrl,
+    size,
+    description,
+    image,
+    latitude,
+    longitude
   } = req.body;
+
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).send("No property with that id");
   }
 
   const updatedProperty = {
-    name,
-    description,
-    location,
+    title,
+    address,
     price,
+    type,
     bedrooms,
     bathrooms,
-    sqft,
-    imgUrl,
-    _id: id,
+    size,
+    description,
+    image,
+    latitude,
+    longitude,
+    _id: id
   };
-
+  
   try {
     await Property.findByIdAndUpdate(id, updatedProperty, { new: true });
     res.json(updatedProperty);
@@ -70,7 +131,32 @@ export const updateProperty = async (req, res) => {
   }
 };
 
-// Delete a property
+/**/
+/*
+NAME
+    deleteProperty - Deletes a property from the database.
+
+SYNOPSIS
+    deleteProperty(req, res)
+
+DESCRIPTION
+    Attempts to delete a property from the database based on the ID provided in the request parameters.
+    First, it checks if the provided ID is valid using mongoose's ObjectId validation. If the ID is invalid or no 
+    property is found with that ID, a 404 status with an appropriate message is returned.
+    If the deletion operation succeeds, a confirmation message is sent back to the client. 
+    If any error occurs during deletion, appropriate error messages and status codes are returned.
+
+PARAMETERS
+    - req: The HTTP request object, containing the property's ID in its parameters.
+    - res: The HTTP response object.
+
+RETURNS
+    - On Successful Deletion: JSON with a confirmation message "Property deleted successfully".
+    - On Invalid ID: HTTP 404 status code with an error message "No property with that id".
+    - On Error: HTTP 409 status code with an error message in JSON format.
+*/
+/**/
+
 export const deleteProperty = async (req, res) => {
   const { id } = req.params;
 
@@ -86,7 +172,29 @@ export const deleteProperty = async (req, res) => {
   }
 };
 
-// Get a property by id
+/**/
+/*
+NAME
+    getPropertyById - Fetches a property from the database by its ID.
+
+SYNOPSIS
+    getPropertyById(id)
+
+DESCRIPTION
+    Retrieves a property from the database based on the provided ID. 
+    It uses Mongoose's findById() method to find the property.
+    If the property is found, it returns the property. If any error occurs during the 
+    retrieval, it logs the error and returns null.
+
+PARAMETERS
+    - id: The ID of the property to be retrieved.
+
+RETURNS
+    - On Successful Retrieval: The property object.
+    - On Error: Null and logs the error to the console.
+*/
+/**/
+
 export const getPropertyById = async (id) => {
   try {
     const property = await Property.findById(id);
@@ -97,7 +205,32 @@ export const getPropertyById = async (id) => {
   }
 };
 
-// Get properties with query filter if any
+/**/
+/*
+NAME
+    getProperties - Fetches properties from the database based on filters.
+
+SYNOPSIS
+    getProperties(req, res)
+
+DESCRIPTION
+    Retrieves properties from the database based on the filters provided in the query parameters. 
+    Supported filters include: type, minPrice, maxPrice, minBedrooms, maxBedrooms, 
+    minBathrooms, maxBathrooms, minSize, and maxSize. 
+    The function constructs a filter object based on the provided query parameters and 
+    uses Mongoose's find() method to fetch matching properties.
+    Sends back the properties that match the criteria or an error message in case of failure.
+
+PARAMETERS
+    - req: The HTTP request object, containing query parameters for filtering.
+    - res: The HTTP response object, used to send back the fetched properties or an error message.
+
+RETURNS
+    - On Successful Retrieval: JSON array of properties matching the criteria.
+    - On Error: 404 status code with an error message.
+*/
+/**/
+
 export const getProperties = async (req, res) => {
   const {
     type,

@@ -17,6 +17,7 @@
     "express-session": "^1.17.3",
     "mailgun-js": "^0.22.0",
     "mongoose": "^7.0.4",
+    "node-fetch": "^3.3.2",
     "nodemailer": "^6.9.1",
     "nodemon": "^2.0.22",
     "passport": "^0.6.0",

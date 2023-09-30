@@ -1,3 +1,29 @@
+/*
+Express Application Setup
+NAME
+    Express Application - Configuration and initialization of an Express.js server.
+SYNOPSIS
+    The code initializes an Express server, connects to MongoDB, sets up middleware, and routes.
+DESCRIPTION
+    This code sets up an Express.js application with various middleware, MongoDB connection, and route configurations. 
+    It ensures the app is ready to receive and respond to HTTP requests.
+MIDDLEWARE USED
+    - dotenv: Loads environment variables from a .env file.
+    - express.json: Parses incoming requests with JSON payloads.
+    - cors: Enables Cross-Origin Resource Sharing (CORS) configuration for the app.
+    - session: Session middleware to manage user sessions.
+    - passport: Initialize and handle authentication using Passport.
+    - passport.session: Middleware to ensure Passport handles session management.
+ROUTES
+    The app defines routes for authentication, news, properties, email sending, and geocoding.
+    - /auth: Routes related to authentication processes.
+    - /news: Routes for news-related operations.
+    - /properties: Routes for property-related operations.
+    - / (root): Routes for sending emails.
+    - /geocode: Routes for geocoding operations.
+EXPORT
+    The code doesn't explicitly export anything, but the server starts listening on port 8000.
+*/
 
 import express from "express";
 import cors from "cors";
@@ -7,7 +33,7 @@ import session from "express-session";
 import dotenv from "dotenv";
 dotenv.config();
 
-import './passport.js';
+import "./passport.js";
 
 const app = express();
 
@@ -31,6 +57,7 @@ import authRoute from "./routes/auth.js";
 import newsRoute from "./routes/news.js";
 import propertyRoute from "./routes/property.js";
 import sendMailRoute from "./routes/sendMail.js";
+import geocodeRoute from "./routes/geocode.js";
 
 app.use(express.json());
 
@@ -48,11 +75,9 @@ app.use(
     resave: false,
     saveUninitialized: true,
     cookie: {
-      secure: false
-    }
-    
+      secure: false,
+    },
   })
-
 );
 
 //The order of middlewares is important in Express.js.
@@ -64,6 +89,7 @@ app.use("/auth", authRoute);
 app.use("/news", newsRoute);
 app.use("/properties", propertyRoute);
 app.use("/", sendMailRoute);
+app.use("/geocode", geocodeRoute);
 
 app.listen("8000", () => {
   connect();

@@ -1,3 +1,32 @@
+/**/
+/*
+Property Model
+
+NAME
+    Property Schema - Defines the structure of the Property entity in the application's database.
+
+DESCRIPTION
+    This module creates and exports a Mongoose schema for properties. It contains various attributes
+    pertinent to property entities, such as title, address, price, type, and other details relevant to real estate properties.
+
+FIELDS
+    - title: Title or name of the property (required).
+    - address: Complete address of the property (required).
+    - price: Price or rental amount of the property (required).
+    - type: The purpose for which the property is available - either "sale" or "rent" (required).
+    - bedrooms: Number of bedrooms in the property (required).
+    - bathrooms: Number of bathrooms in the property (required).
+    - size: Size or area of the property, typically in square feet/meters or other units (required).
+    - description: A brief description or other relevant details about the property (required).
+    - image: URL or path to an image of the property.
+    - latitude: The latitude coordinate for geolocation purposes (required).
+    - longitude: The longitude coordinate for geolocation purposes (required).
+
+EXPORT
+    Exports the Property model to be used in other parts of the application where database operations related to properties are required.
+*/
+/**/
+
 import mongoose from "mongoose";
 
 const PropertySchema = new mongoose.Schema(
@@ -46,11 +75,6 @@ const PropertySchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    // createdBy: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: "User",
-    //   required: true,
-    // },
   },
   { timestamps: true }
 );
